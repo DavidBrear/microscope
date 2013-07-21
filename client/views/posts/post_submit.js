@@ -9,9 +9,13 @@ Template.postSubmit.events({
     };
 
     Meteor.call('post', post, function(error, id) {
-      if (error)
-        return alert(error.reason);
-      Meteor.Router.to('postPage', id);
+      if (error) {
+        throwError(error.reason);
+        if(error.error === 302)
+          Meteor.Router.to('postPage', error.details);
+      } else {
+        Meteor.Router.to('postPage', id);
+      }
     });
   }
 });
